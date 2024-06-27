@@ -2,9 +2,17 @@ import speech_recognition as sr
 import subprocess
 import os
 
-# Path to the audio file
+# Paths to the audio files
 audio_file_path = "media/AUDIO-2022-11-28-11-58-17.m4a"
 wav_file_path = "media/AUDIO-2022-11-28-11-58-17.wav"
+transcription_folder = "transcription"
+
+# Ensure the transcription folder exists
+if not os.path.exists(transcription_folder):
+    os.makedirs(transcription_folder)
+
+# Derive the transcription file path
+transcription_file_path = os.path.join(transcription_folder, os.path.splitext(os.path.basename(audio_file_path))[0] + ".txt")
 
 # Check if the audio file exists
 if not os.path.exists(audio_file_path):
@@ -26,6 +34,11 @@ else:
         try:
             text = recognizer.recognize_google(audio, language="es-ES")
             print(f'Texto reconocido:\n{text}')
+
+            # Save the transcription to a text file
+            with open(transcription_file_path, "w") as file:
+                file.write(text)
+            print(f"Transcripción guardada en {transcription_file_path}")
         except sr.UnknownValueError:
             print("Lo siento, no pude entender el audio.")
         except sr.RequestError as e:
