@@ -65,6 +65,34 @@ Este repositorio contiene un script para convertir archivos de audio en formato 
     pip install SpeechRecognition
     ```
 
+### Ubuntu Linux
+
+1. Actualizar los repositorios e instalar `ffmpeg` y las dependencias necesarias:
+
+    ```sh
+    sudo apt update
+    sudo apt install ffmpeg libportaudio2
+    ```
+
+2. Instalar `portaudio` y `pyaudio`:
+
+    ```sh
+    sudo apt install portaudio19-dev python3-pyaudio
+    ```
+
+3. Crear un entorno virtual (opcional pero recomendado):
+
+    ```sh
+    python3 -m venv .venv
+    source .venv/bin/activate
+    ```
+
+4. Instalar las dependencias de Python:
+
+    ```sh
+    pip install SpeechRecognition pyaudio
+    ```
+
 ## Uso
 
 1. Clonar el repositorio:
@@ -74,7 +102,7 @@ Este repositorio contiene un script para convertir archivos de audio en formato 
     cd tu_repositorio
     ```
 
-2. Asegúrate de que el archivo de audio M4A esté en la carpeta `media`.
+2. Asegúrate de que los archivos de audio M4A estén en la carpeta `media`.
 
 3. Ejecutar el script:
 
@@ -86,7 +114,7 @@ Este repositorio contiene un script para convertir archivos de audio en formato 
 
 ## Notas
 
-- Asegúrate de que el archivo de audio esté correctamente ubicado y que las rutas en el script sean precisas.
+- Asegúrate de que los archivos de audio estén correctamente ubicados y que las rutas en el script sean precisas.
 - Si encuentras problemas durante la instalación de las dependencias, consulta la documentación oficial de cada herramienta para obtener más ayuda.
 
 ## Licencia
