@@ -2,6 +2,9 @@ import speech_recognition as sr
 import subprocess
 import os
 
+# Constants
+CHUNK_LENGTH_MS = 60000  # Length of each chunk in milliseconds (60 seconds)
+
 # Folder paths
 media_folder = "media"
 transcription_folder = "transcription"
@@ -30,22 +33,35 @@ for audio_file_name in os.listdir(media_folder):
             # Initialize recognizer
             recognizer = sr.Recognizer()
 
-            # Recognize speech using the converted WAV file
-            with sr.AudioFile(wav_file_path) as source:
-                audio = recognizer.record(source)
+            # Split the audio file into chunks
+            from pydub import AudioSegment
+            audio = AudioSegment.from_wav(wav_file_path)
+            chunks = [audio[i:i + CHUNK_LENGTH_MS] for i in range(0, len(audio), CHUNK_LENGTH_MS)]
 
-            # Transcribe audio to text
-            try:
-                text = recognizer.recognize_google(audio, language="es-ES")
-                print(f'Texto reconocido para {audio_file_name}:\n{text}')
+            # Process each chunk
+            full_text = ""
+            for i, chunk in enumerate(chunks):
+                chunk_file_path = os.path.join(media_folder, f"chunk_{i}.wav")
+                chunk.export(chunk_file_path, format="wav")
 
-                # Save the transcription to a text file
-                with open(transcription_file_path, "w") as file:
-                    file.write(text)
-                print(f"Transcripción guardada en {transcription_file_path}")
-            except sr.UnknownValueError:
-                print(f"Lo siento, no pude entender el audio de {audio_file_name}.")
-            except sr.RequestError as e:
-                print(f"Error al realizar la solicitud al servicio de reconocimiento de voz para {audio_file_name}; {e}")
+                with sr.AudioFile(chunk_file_path) as source:
+                    audio_data = recognizer.record(source)
+
+                try:
+                    text = recognizer.recognize_google(audio_data, language="es-ES")
+                    full_text += text + " "
+                    print(f'Texto reconocido para el fragmento {i} de {audio_file_name}:\n{text}')
+                except sr.UnknownValueError:
+                    print(f"Lo siento, no pude entender el audio del fragmento {i} de {audio_file_name}.")
+                except sr.RequestError as e:
+                    print(f"Error al realizar la solicitud al servicio de reconocimiento de voz para el fragmento {i} de {audio_file_name}; {e}")
+
+                # Remove the chunk file after processing
+                os.remove(chunk_file_path)
+
+            # Save the full transcription to a text file
+            with open(transcription_file_path, "w") as file:
+                file.write(full_text.strip())
+            print(f"Transcripción completa guardada en {transcription_file_path}")
         else:
             print(f"Error: No se pudo crear el archivo WAV {wav_file_path}.")

@@ -1,6 +1,6 @@
 # Audio Transcription Script
 
-Este repositorio contiene un script para convertir archivos de audio en formato M4A a texto utilizando `ffmpeg` y `speech_recognition`. El script convierte el archivo de audio a formato WAV y luego transcribe el audio a texto, guardando la transcripción en un archivo de texto en una carpeta llamada `transcription`.
+Este repositorio contiene un script para convertir archivos de audio en formato M4A a texto utilizando `ffmpeg`, `speech_recognition` y `pydub`. El script convierte el archivo de audio a formato WAV, lo divide en fragmentos manejables, y luego transcribe cada fragmento a texto, guardando la transcripción en un archivo de texto en una carpeta llamada `transcription`.
 
 ## Requisitos
 
@@ -8,6 +8,7 @@ Este repositorio contiene un script para convertir archivos de audio en formato 
 - `ffmpeg`
 - `speech_recognition`
 - `pyaudio`
+- `pydub`
 
 ## Instalación
 
@@ -35,7 +36,7 @@ Este repositorio contiene un script para convertir archivos de audio en formato 
 4. Instalar las dependencias de Python:
 
     ```sh
-    pip install SpeechRecognition pyaudio
+    pip install SpeechRecognition pyaudio pydub
     ```
 
 ### Windows
@@ -62,7 +63,7 @@ Este repositorio contiene un script para convertir archivos de audio en formato 
 4. Instalar las dependencias de Python:
 
     ```sh
-    pip install SpeechRecognition
+    pip install SpeechRecognition pydub
     ```
 
 ### Ubuntu Linux
@@ -90,7 +91,7 @@ Este repositorio contiene un script para convertir archivos de audio en formato 
 4. Instalar las dependencias de Python:
 
     ```sh
-    pip install SpeechRecognition pyaudio
+    pip install SpeechRecognition pydub
     ```
 
 ## Uso
@@ -111,6 +112,10 @@ Este repositorio contiene un script para convertir archivos de audio en formato 
     ```
 
 4. La transcripción se guardará en un archivo de texto en la carpeta `transcription` con el mismo nombre que el archivo de audio original.
+
+## Manejo de archivos de audio largos
+
+El script está diseñado para manejar archivos de audio largos dividiéndolos en fragmentos más pequeños de 60 segundos. Cada fragmento se procesa y transcribe por separado, y las transcripciones se concatenan en un solo archivo de texto. Si necesitas ajustar el tamaño del fragmento, puedes modificar la constante `CHUNK_LENGTH_MS` en el script `transcribe_audio.py`.
 
 ## Notas
 
